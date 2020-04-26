@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -e
+
+mkdir -p out
+
+docker build -t dh-make-perl .
+
+docker run --rm -v "${PWD}/scripts:/scripts:ro" \
+	-v "${PWD}/out:/out" -e USER=$(id -u) -e GROUP=$(id -g) \
+	-e "CPANMODULE=$1" \
+	-e "DEBEMAIL=${DEBEMAIL}" -e "DEBFULLNAME=${DEBFULLNAME}" \
+	-e "LOGNAME=${LOGNAME}" \
+	dh-make-perl /scripts/makedeb-docker-helper
+
+echo "Debian package has been written to $(pwd)/out"

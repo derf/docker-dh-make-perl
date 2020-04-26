@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+mkdir -p /src/app
+cd /src/app
+
+cpan2deb --install-deps --install-build-deps "${CPANMODULE}"
+
+chown ${USER}:${GROUP} *.deb
+mv -v *.deb /out
